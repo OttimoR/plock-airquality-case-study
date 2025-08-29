@@ -1,0 +1,464 @@
+---
+title: "Air Quality Case Study in Płock City"
+author: "Jakub Szymański"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    self_contained: true
+mainfont: Montserrat
+---
+
+```{r, warning=FALSE, message=FALSE}
+#setup
+library(ggplot2)
+library(dplyr)
+library(sf)
+library(readr)
+library(openair)
+library(lubridate)
+library(patchwork)
+library(kableExtra)
+```
+
+## Introduction
+
+Płock is a city closely tied to the largest oil refinery in Poland. For years, residents have reported episodes of significant air pollution, often accompanied by strong odors that not only discourage potential newcomers but also raise concerns about long-term health risks.
+
+In 2023, the Płock district ranked 12th out of 380 districts in Poland in terms of the percentage of deaths attributed to respiratory diseases. This places Płock among the most affected regions in the country.
+
+A common public opinion is that local air quality problems are primarily driven by wind direction, which transports refinery emissions into the city.
+
+```{r, warning=FALSE, message=FALSE, fig.width=8, fig.height=8, fig.align="center"}
+rdp <- read_csv("2023_resp_diseases_percent.csv")
+rdp$District_code <- sprintf("%04d", rdp$District_code)
+rdp$District_code <- as.character(rdp$District_code)
+
+poland_map <- st_read("https://geodata.ucdavis.edu/gadm/gadm4.1/json/gadm41_POL_2.json", quiet = TRUE)
+
+poland_map <- poland_map %>%
+  filter(!is.na(CC_2))
+
+poland_disease_map <- poland_map %>%
+  left_join(rdp, by = c("CC_2" = "District_code"))
+
+poland_disease_map <- poland_disease_map %>% 
+  mutate(rate_cat = cut(percent_of_total_deaths,
+                        breaks = c(-Inf, 4, 7, 10, Inf),
+                        labels = c("<4%", "4-7%", "7-10%", ">10%")
+                        ))
+
+# Extract Płock coordinates to draw a circle around district
+plock_coord <- poland_disease_map %>%
+  filter(Nazwa == "Powiat m. Płock") %>%
+  st_centroid() %>%
+  st_coordinates() %>%
+  as.data.frame()
+
+ggplot(poland_disease_map) +
+  geom_sf(aes(fill = rate_cat), color = "white", size = 0.1) +
+  scale_fill_manual(
+    values = c("<4%" = "#fffdd0",
+               "4-7%" = "#fbc687",
+               "7-10%" = "#f4978e",
+               ">10%" = "#c1121f"),
+    na.value = "grey90"
+  ) +
+  labs(
+    caption = "Fig. 1. Share of deaths caused by respiratory diseases, by District in 2023 [%].",
+    fill = "Share of deaths"
+  ) +
+  theme_minimal() + 
+  theme(plot.caption = element_text(hjust = 0.5, size = 10),
+        axis.title = element_blank()) +
+  geom_point(data = plock_coord, aes(x = X, y = Y), color = "black", size = 8, shape = 1, stroke = 2) +
+  geom_label(data = plock_coord, aes(x = X + 1, y = Y + 0.35, label = "Płock = 11%"), color = "black", fill = "white", size = 4)
+
+
+```
+
+## Objective
+
+The aim of this project is to investigate the relationship between emissions from the Orlen refinery, measured air pollutants, and wind conditions in Płock. The ultimate goal is to provide an evidence-based assessment of whether wind explains the observed pollution patterns and to highlight potential implications for public health and policy.
+
+## Data Sources
+
+-   Air quality in Płock: [Polish Chief Inspectorate for Environmental Protection](https://powietrze.gios.gov.pl/pjp/archives) - data from st. Mikołaja Reja 28 station,
+-   Wind data: [ERA5-Land Hourly - ECMWF Climate reanalysis](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY?hl=pl#description) from Google's Earth Engine Data Catalog,
+-   Respiratory diseases data: [Polish Central Statistical Office](https://bdl.stat.gov.pl/bdl/dane/podgrup/wymiary).
+
+## Data Preparation
+
+Data preparation consisted of three steps:
+
+1.  Data acquisition: downloaded air quality data directly from site, downloaded wind data using Earth Engine API with a python script.
+2.  Data cleaning: uploaded air quality to Google Sheets to remove all unecessary informative rows, switched to point-decimal format and changed the file format to .csv; data cleaning for wind data done with python script.
+3.  Data filtering and merging: used BigQuery SQL to filter and join necessary columns for this analysis creating one table for convenient plotting.
+
+<br>
+
+<details>
+
+<summary>Click here to view Python code</summary>
+
+```{python, eval=FALSE}
+import ee
+import pandas as pd
+import numpy as np
+
+# Initialize Earth Engine
+ee.Initialize(project='plock-air-468917')
+
+# Define point and time range for data collection
+point = ee.Geometry.Point([19.70, 52.55])  # Płock coordinates
+start_date = '2024-01-01'
+end_date = '2024-12-31'
+
+# Load data
+dataset = ee.ImageCollection('ECMWF/ERA5_LAND/HOURLY') \
+    .filterBounds(point) \
+    .filterDate(start_date, end_date) \
+    .select(['u_component_of_wind_10m', 'v_component_of_wind_10m'])
+
+timeseries = dataset.getRegion(point, scale=1000).getInfo()
+
+# Convert to DataFrame
+df = pd.DataFrame(timeseries[1:], columns=timeseries[0])
+df['datetime'] = pd.to_datetime(df['time'], unit='ms')
+
+# Calculate wind speed 
+df['wind_speed'] = np.sqrt(df['u_component_of_wind_10m']**2 + df['v_component_of_wind_10m']**2)
+
+# Calculate wind direction
+df['wind_direction_deg'] = np.degrees(np.arctan2(-df['u_component_of_wind_10m'], 
+                                                  -df['v_component_of_wind_10m'])) % 360
+
+# Convert degrees to cardinal directions
+def degrees_to_cardinal(d):
+    dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+    ix = round(d / (360. / len(dirs)))
+    return dirs[ix % len(dirs)]
+
+df['wind_direction_cardinal'] = df['wind_direction_deg'].apply(degrees_to_cardinal)
+
+# Select final columns
+final_columns = [
+    'datetime',
+    'u_component_of_wind_10m',
+    'v_component_of_wind_10m',
+    'wind_speed',
+    'wind_direction_deg',
+    'wind_direction_cardinal'
+]
+df = df[final_columns]
+
+# Save to CSV
+df.to_csv('plock_wind_2024_complete.csv', index=False)
+print("CSV saved with all wind metrics!")
+```
+
+</details>
+
+<details>
+
+<summary>Click here to view SQL example table filter query</summary>
+
+```{sql, eval=FALSE}
+SELECT 
+ DATETIME_ADD(DATETIME(datetime, 'UTC'), INTERVAL 2000 YEAR) as datetime,
+ `MzPlocKroJad-C6H6-1g` as Plock_KJ,
+ `MzPlocMiReja-C6H6-1g` as Plock_MR,
+FROM `plock-air.2024_plock_air.2024_c6h6_raw`
+WHERE
+  datetime IS NOT NULL
+  AND `MzPlocKroJad-C6H6-1g` IS NOT NULL
+  AND `MzPlocMiReja-C6H6-1g` IS NOT NULL
+```
+
+</details>
+
+<details>
+
+<summary>Click here to view SQL merging data to one table query</summary>
+
+```{sql, eval=FALSE}
+SELECT 
+  c.datetime,
+  c.Plock_MR as C6H6,
+  s.Plock_MR as SO2,
+  n.Plock_MR as NO2,
+  p.Plock_MR as PM25,
+  ROUND(w.wind_speed, 2) as wind_v,
+  ROUND(w.wind_direction_deg) as wind_deg,
+  w.wind_direction_cardinal as dir
+ FROM `plock-air.2024_plock_air.2024_c6h6_clean` as c
+ JOIN `plock-air.2024_plock_air.2024_no2_clean` as n USING(datetime)
+ JOIN `plock-air.2024_plock_air.2024_so2_clean` as s USING(datetime)
+ JOIN `plock-air.2024_plock_air.2024_pm25_clean` as p USING(datetime)
+ JOIN `plock-air.2024_plock_air.2024_plock_wind_raw` as w USING(datetime)
+ ORDER BY c.datetime
+```
+
+</details>
+
+<br><br> Preview of the full data set can be found below:
+
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+plock_case <- read_csv("2024_pollution_vs_wind_plock.csv")
+head(plock_case)
+```
+
+<br>
+
+Let's take top hourly readings of air pollutants and plot it against direction of wind to look for any patterns:
+
+```{r, fig.show='hold', out.width='50%', warning=FALSE, message=FALSE, fig.width=7, fig.height=7}
+pollution_vs_wind_plock <- read.csv("2024_pollution_vs_wind_plock.csv")
+
+
+p1 <- pollutionRose(pollution_vs_wind_plock, ws = "wind_v", wd = "wind_deg",
+                    pollutant = "C6H6", 
+                    key.footer = expression("Fig. 2. Hourly Benzene C"[6]*"H"[6]*" [µg/m"^3*"] readings."),
+                    key.posit = "bottom", 
+                    key = list(cex = 2,
+                                height = 1,
+                                width = 2),
+                    paddle = FALSE,
+                    normalise = FALSE,
+                    alpha = 1)
+
+p2 <- pollutionRose(pollution_vs_wind_plock, ws = "wind_v", wd = "wind_deg",
+                    pollutant = "NO2",
+                    key.footer = expression("Fig. 3. Hourly Nitrogen dioxide NO"[2]*" [µg/m"^3*"] readings."), 
+                    key.posit = "bottom", 
+                    key = list(cex = 2,
+                                height = 1,
+                                width = 2),
+                    paddle = FALSE, 
+                    normalise = FALSE, 
+                    alpha = 1)
+
+p3 <- pollutionRose(pollution_vs_wind_plock, ws = "wind_v", wd = "wind_deg",
+                    pollutant = "SO2", 
+                    key.footer = expression("Fig. 4. Hourly Sulfur dioxide SO"[2]* " [µg/m"^3*"] readings."), 
+                    key.posit = "bottom", 
+                    key = list(cex = 2,
+                                height = 1,
+                                width = 2),
+                    paddle = FALSE, 
+                    normalise = FALSE, 
+                    alpha = 1)
+
+p4 <- pollutionRose(pollution_vs_wind_plock, ws = "wind_v", wd = "wind_deg",
+                    pollutant = "PM25", 
+                    key.footer = expression("Fig .5. Hourly Fine particulate matter PM"[2.5]*" [µg/m"^3*"] readings."), 
+                    key.posit = "bottom", 
+                    key = list(cex = 2,
+                                height = 1,
+                                width = 2),
+                    paddle = FALSE, 
+                    normalise = FALSE, 
+                    alpha = 1)
+
+```
+
+We can already see patterns for most pollutants. It is becoming clear that lowest readings for PM~2.5~, NO~2~, C~6~H~6~ happen when the wind direction in the city is heading West - away from the refinery, which is located North-West of town and pollutants measurement point. Below is a plot presenting frequency of wind cardinal directions along with its speed which values cover the frequency of measurements for pollutants.
+
+```{r, fig.width=5, fig.height=5, warning=FALSE, message=FALSE, fig.align="center"}
+windRose(pollution_vs_wind_plock, ws = "wind_v", wd = "wind_deg", key.footer = "Fig. 6. Wind speed [m/s] against direction.", key.posit = "bottom", paddle = FALSE, normalise = FALSE, alpha = 1, cols = c("#EBF5FB", "#D6EAF8", "#AED6F1", "#85C1E9", "#5DADE2", "#3498DB", "#2E86C1"))
+```
+
+Let's now plot only highest values and peaks of pollutants readings against wind directions to have a better look. We will take European pollution norms as threshold values for next plots:
+
+-   **C~6~H~6~** : 5 μg/m³ (EU annual limit)
+
+-   **NO~2~** : 40 μg/m³ (EU annual limit)
+
+-   **SO~2~** : 20 μg/m³ (EU 24-hour limit)
+
+-   **PM~2.5~** : 25 μg/m³ (EU 24-hour limit)
+
+```{r, fig.show='hold', out.width='50%', fig.width=7, fig.height=7}
+
+c6h6_high <- pollution_vs_wind_plock %>% filter(C6H6 > 5)
+no2_high <- pollution_vs_wind_plock %>% filter(NO2 > 40)
+so2_high <- pollution_vs_wind_plock %>% filter(SO2 > 20)
+pm25_high <- pollution_vs_wind_plock %>% filter(PM25 > 25)
+
+p1h <- pollutionRose(c6h6_high, ws = "wind_v", wd = "wind_deg", 
+                     pollutant = "C6H6", 
+                     key.footer = expression("Fig. 7. Above norm hourly Benzene C"[6]*"H"[6]*" [µg/m"^3*"] readings."), 
+                     key.posit = "bottom", 
+                     key = list(cex = 2,
+                                height = 1,
+                                width = 2), 
+                     paddle = FALSE, 
+                     normalise = FALSE, 
+                     alpha = 1)
+
+p2h <- pollutionRose(no2_high, ws = "wind_v", wd = "wind_deg", 
+                     pollutant = "NO2", 
+                     key.footer = expression("Fig. 8. Above norm hourly Nitrogen dioxide NO"[2]* " [µg/m"^3*"] readings."), 
+                     key.posit = "bottom", 
+                     key = list(cex = 2,
+                                height = 1,
+                                width = 2),
+                     paddle = FALSE, 
+                     normalise = FALSE, 
+                     alpha = 1)
+
+p3h <- pollutionRose(so2_high, ws = "wind_v", wd = "wind_deg", 
+                     pollutant = "SO2", 
+                     key.footer = expression("Fig. 9. Above norm hourly Sulfur dioxide SO"[2]*" [µg/m"^3*"] readings."), 
+                     key.posit = "bottom", 
+                     key = list(cex = 2,
+                                height = 1,
+                                width = 2),
+                     paddle = FALSE, 
+                     normalise = FALSE, 
+                     alpha = 1)
+
+p4h <- pollutionRose(pm25_high, ws = "wind_v", wd = "wind_deg", 
+                     pollutant = "PM25", 
+                     key.footer = expression("Fig. 10. Above norm hourly particulate matter PM"[2.5]*" [µg/m"^3*"] readings."), 
+                     key.posit = "bottom", 
+                     key = list(cex = 2,
+                                height = 1,
+                                width = 2),
+                     paddle = FALSE, 
+                     normalise = FALSE, 
+                     alpha = 1)
+
+```
+
+<br>
+
+Additionally, since many people have stated that at night the smell often becomes more distinct, let's filter and plot values above norm thresholds for night and day separately using box plots.
+
+<br>
+
+```{r, fig.show='hold', out.width='50%', fig.width=7, fig.height=7}
+
+p1hnd <- c6h6_high %>%
+  mutate(period = ifelse(between(hour(datetime), 7, 19), "Day", "Night")) %>%
+  ggplot(aes(x = period, y = C6H6, fill = period)) +
+  geom_boxplot() +
+  labs(caption = "Fig. 11. Above norm Benzene\n concentrations day and night comparison.",
+       y = expression("Benzene C"[6]*"H"[6]*" [µg/m"^3*"]"), x = "") +
+  scale_fill_manual(values = c("Day" = "#ffd700", "Night" = "#483d8b")) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust = 0.5, size = 13))
+print(p1hnd)
+
+p2hnd <- no2_high %>%
+  mutate(period = ifelse(between(hour(datetime), 7, 19), "Day", "Night")) %>%
+  ggplot(aes(x = period, y = NO2, fill = period)) +
+  geom_boxplot() +
+  labs(caption = "Fig. 12. Above norm Nitrous Dioxide\n concentrations day and night comparison.",
+       y = expression("Nitrogen dioxide NO"[2]* " [µg/m"^3*"]"), x = "") +
+  scale_fill_manual(values = c("Day" = "#ffd700", "Night" = "#483d8b")) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust = 0.5, size = 13))
+print(p2hnd)
+
+p3hnd <- so2_high %>%
+  mutate(period = ifelse(between(hour(datetime), 7, 19), "Day", "Night")) %>%
+  ggplot(aes(x = period, y = SO2, fill = period)) +
+  geom_boxplot() +
+  labs(caption = "Fig. 13. Above norm Sulfur Dioxide\n concentrations day and night comparison.",
+       y = expression("Fig. 9. Sulfur dioxide SO"[2]*" [µg/m"^3*"]"), x = "") +
+  scale_fill_manual(values = c("Day" = "#ffd700", "Night" = "#483d8b")) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust = 0.5, size = 13))
+print(p3hnd)
+
+p4hnd <- pm25_high %>%
+  mutate(period = ifelse(between(hour(datetime), 7, 19), "Day", "Night")) %>%
+  ggplot(aes(x = period, y = PM25, fill = period)) +
+  geom_boxplot() +
+  labs(caption = "Fig. 14. Above norm Fine Particular Matter\n concentrations day and night comparison.",
+       y = expression("Particulate matter PM"[2.5]*" [µg/m"^3*"]"), x = "") +
+  scale_fill_manual(values = c("Day" = "#ffd700", "Night" = "#483d8b")) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust = 0.5, size = 13))
+print(p4hnd)
+
+```
+
+## Key findings
+
+Produced plots allow for certain conclusions:
+
+-   Wind direction in the city favors pollution spread from refinery with big proportion of southern and eastern winds during the year. (see Fig. 6)
+
+-   Every one of the analyzed pollutants exceeded norms throughout the year and there has been **169** days (**nearly half the year**) in year 2024 in Płock, where at least one of the pollutants exceeded safe levels with Particular Matter 2.5 pollution being most frequent with 119 days in a year (see Table 1 below for summary).
+
+-   Strong patterns of highest pollutants concentration in relation to wind direction (E, S, SE) coming from refinery noticed for Nitrous Dioxide, Particulate Matter 2.5 and Sulfur Dioxide. (see Fig. 7-10)
+
+-   Benzene exceeds norms across multiple wind directions. While lowest values are consistently observed during westerly winds (blowing away from the refinery), exceedances occur even when the refinery is not directly upwind. This suggests either (a) benzene emissions are so high that wind direction has limited effect, or (b) there are additional, unidentified benzene sources in the area (Figs. 2–5).
+
+-   Day and night comparison proves the notion of a stronger smell during night. Elevated benzene and PM2.5 levels are more common at night, supporting residents’ reports of stronger odors after dark and raising suspicion of intentional nighttime releases (Figs. 11–14).
+
+```{r}
+
+all_cases <- pollution_vs_wind_plock %>% filter(C6H6 > 5 | NO2 > 40 | SO2 > 20 | PM25 > 25)
+
+exceedance_table <- data.frame(
+  Pollutant = c("Benzene", "Nitrogen Dioxide", 
+                "Sulfur Dioxide", "PM2.5"),
+  Norm_Threshold = c(">5 μg/m³", ">40 μg/m³", ">20 μg/m³", ">25 μg/m³"),
+  Count_Exceedances = c(nrow(c6h6_high), nrow(no2_high), 
+                        nrow(so2_high), nrow(pm25_high)),
+  Total_Readings = nrow(pollution_vs_wind_plock),
+  Percentage = round(c(nrow(c6h6_high)/nrow(pollution_vs_wind_plock)*100,
+                      nrow(no2_high)/nrow(pollution_vs_wind_plock)*100,
+                      nrow(so2_high)/nrow(pollution_vs_wind_plock)*100,
+                      nrow(pm25_high)/nrow(pollution_vs_wind_plock)*100), 1),
+  Number_of_days_in_a_year_with_exceedances = c(
+  length(unique(as.Date(c6h6_high$datetime))), 
+  length(unique(as.Date(no2_high$datetime))), 
+  length(unique(as.Date(so2_high$datetime))), 
+  length(unique(as.Date(pm25_high$datetime)))),
+  
+  Number_of_days_with_any_exceedance = c(length(unique(as.Date(all_cases$datetime))
+)))
+
+exceedance_table %>%
+  kable(caption = "Table 1. Pollutant Norm Exceedance Summary 2024",
+        col.names = c("Pollutant", "Norm Threshold", "Exceedance Count", 
+                      "Total Readings", "Exceedance (%)", "Num of days with a exceedance", "Num of days with any exceedance")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), 
+                full_width = FALSE,
+                font_size = 14) %>%
+  row_spec(0, bold = TRUE, color = "white", background = "grey")
+```
+
+## Recommendations
+
+Described observations give critical insight into air quality in the city of Płock for year 2024. In order to keep its residents healthy and attract newcomers city needs to take measures to prevent such pollution levels in next years. Possible solutions were divided into three categories:
+
+1.  Short-term (operational improvements & monitoring)
+
+-   Independent real-time air quality monitoring stations around the city,
+-   Community alert systems when pollutants exceed norms (e.g. SMS or app notifications)
+-   Nighttime refinery audits to determine whether emissions are being intentionally concentrated during night hours.
+
+2.  Medium-term (policy & urban planning)
+
+-   Stronger enforcement of EU air quality directives - currently fines for each exceedance day are weakly enforced, this needs to change,
+-   Buffer zones or green belts of tress between refinery and residential areas to reduce direct transport of Particulate Matter as well as gases,
+-   Wind-resilient urban planning - e.g. placing sensitive infrastructure like schools and hospitals on upwind sides of the city,
+
+3.  Long-term (structural change)
+
+-   Push refinery to adopt desulfurization and benzene-reduction technologies beyond current EU minimums,
+-   Health surveillance programs - regular checkups among residents.
+
+## Call to action
+
+The analysis confirms what residents of Płock have long suspected: refinery emissions, shaped by prevailing wind directions, are a major driver of the city’s persistent air quality problems. With nearly half the year exceeding safe pollution thresholds, the implications for public health are severe.
+
+Addressing this issue requires action at multiple levels — from real-time monitoring and enforcement, to urban planning, to systemic industrial changes. Without decisive steps, Płock risks continued health burdens and reputational damage.
+<br>
+<br>

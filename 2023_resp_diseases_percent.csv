@@ -1,0 +1,380 @@
+Kod,District_code,Nazwa,percent_of_total_deaths
+201000,201,Powiat bolesławiecki,7
+202000,202,Powiat dzierżoniowski,9.6
+203000,203,Powiat głogowski,10.5
+204000,204,Powiat górowski,9.2
+205000,205,Powiat jaworski,7.7
+206000,206,Powiat karkonoski,5
+207000,207,Powiat kamiennogórski,5.5
+208000,208,Powiat kłodzki,8.6
+209000,209,Powiat legnicki,9.1
+210000,210,Powiat lubański,8.2
+211000,211,Powiat lubiński,7.7
+212000,212,Powiat lwówecki,8.8
+213000,213,Powiat milicki,6.2
+214000,214,Powiat oleśnicki,11.8
+215000,215,Powiat oławski,7.6
+216000,216,Powiat polkowicki,8.5
+217000,217,Powiat strzeliński,8.5
+218000,218,Powiat średzki,10.9
+219000,219,Powiat świdnicki,6.2
+220000,220,Powiat trzebnicki,9.6
+221000,221,Powiat wałbrzyski,6.6
+222000,222,Powiat wołowski,9.2
+223000,223,Powiat wrocławski,11.8
+224000,224,Powiat ząbkowicki,5.3
+225000,225,Powiat zgorzelecki,6.5
+226000,226,Powiat złotoryjski,8.4
+261000,261,Powiat m. Jelenia Góra,6.3
+262000,262,Powiat m. Legnica,8.1
+264000,264,Powiat m. Wrocław,12.6
+265000,265,Powiat m. Wałbrzych od 2013,6
+401000,401,Powiat aleksandrowski,6.5
+402000,402,Powiat brodnicki,5
+403000,403,Powiat bydgoski,8.6
+404000,404,Powiat chełmiński,6.8
+405000,405,Powiat golubsko-dobrzyński,8
+406000,406,Powiat grudziądzki,7.1
+407000,407,Powiat inowrocławski,7.6
+408000,408,Powiat lipnowski,3.9
+409000,409,Powiat mogileński,5.5
+410000,410,Powiat nakielski,7.2
+411000,411,Powiat radziejowski,8.4
+412000,412,Powiat rypiński,5.5
+413000,413,Powiat sępoleński,7.9
+414000,414,Powiat świecki,8
+415000,415,Powiat toruński,8.4
+416000,416,Powiat tucholski,7.5
+417000,417,Powiat wąbrzeski,6.1
+418000,418,Powiat włocławski,6.5
+419000,419,Powiat żniński,7.1
+461000,461,Powiat m. Bydgoszcz,6.9
+462000,462,Powiat m. Grudziądz,8
+463000,463,Powiat m. Toruń,9.6
+464000,464,Powiat m. Włocławek,4.8
+601000,601,Powiat bialski,5.4
+602000,602,Powiat biłgorajski,4.8
+603000,603,Powiat chełmski,4.6
+604000,604,Powiat hrubieszowski,2.8
+605000,605,Powiat janowski,3.1
+606000,606,Powiat krasnostawski,2.6
+607000,607,Powiat kraśnicki,6.7
+608000,608,Powiat lubartowski,5
+609000,609,Powiat lubelski,5.3
+610000,610,Powiat łęczyński,7.6
+611000,611,Powiat łukowski,6.1
+612000,612,Powiat opolski,4.1
+613000,613,Powiat parczewski,8.8
+614000,614,Powiat puławski,6.2
+615000,615,Powiat radzyński,6.5
+616000,616,Powiat rycki,4.5
+617000,617,Powiat świdnicki,4.4
+618000,618,Powiat tomaszowski,3.6
+619000,619,Powiat włodawski,3.8
+620000,620,Powiat zamojski,5.3
+661000,661,Powiat m. Biała Podlaska,8.5
+662000,662,Powiat m. Chełm,4.3
+663000,663,Powiat m. Lublin,7.5
+664000,664,Powiat m. Zamość,4.6
+801000,801,Powiat gorzowski,8.2
+802000,802,Powiat krośnieński,3.2
+803000,803,Powiat międzyrzecki,5.1
+804000,804,Powiat nowosolski,5.1
+805000,805,Powiat słubicki,4.5
+806000,806,Powiat strzelecko-drezdenecki,10.1
+807000,807,Powiat sulęciński,3.7
+808000,808,Powiat świebodziński,5.3
+809000,809,Powiat zielonogórski,4.8
+810000,810,Powiat żagański,5.8
+812000,812,Powiat wschowski,4.9
+861000,861,Powiat m. Gorzów Wielkopolski,7.7
+862000,862,Powiat m. Zielona Góra,4.5
+1001000,1001,Powiat bełchatowski,6.6
+1002000,1002,Powiat kutnowski,10.4
+1003000,1003,Powiat łaski,4.9
+1004000,1004,Powiat łęczycki,6.7
+1005000,1005,Powiat łowicki,7.5
+1006000,1006,Powiat łódzki wschodni,9.3
+1007000,1007,Powiat opoczyński,8
+1008000,1008,Powiat pabianicki,8.7
+1009000,1009,Powiat pajęczański,9.4
+1010000,1010,Powiat piotrkowski,8.4
+1011000,1011,Powiat poddębicki,6.5
+1012000,1012,Powiat radomszczański,7.3
+1013000,1013,Powiat rawski,7.4
+1014000,1014,Powiat sieradzki,9.3
+1015000,1015,Powiat skierniewicki,8.5
+1016000,1016,Powiat tomaszowski,10.4
+1017000,1017,Powiat wieluński,7.2
+1018000,1018,Powiat wieruszowski,3.4
+1019000,1019,Powiat zduńskowolski,10.2
+1020000,1020,Powiat zgierski,10.1
+1021000,1021,Powiat brzeziński,12.4
+1061000,1061,Powiat m. Łódź,10.6
+1062000,1062,Powiat m. Piotrków Trybunalski,8.4
+1063000,1063,Powiat m. Skierniewice,8.3
+1201000,1201,Powiat bocheński,6
+1202000,1202,Powiat brzeski,4.5
+1203000,1203,Powiat chrzanowski,8
+1204000,1204,Powiat dąbrowski,7.2
+1205000,1205,Powiat gorlicki,5.4
+1206000,1206,Powiat krakowski,5.6
+1207000,1207,Powiat limanowski,5.8
+1208000,1208,Powiat miechowski,6
+1209000,1209,Powiat myślenicki,5.2
+1210000,1210,Powiat nowosądecki,5.2
+1211000,1211,Powiat nowotarski,7.1
+1212000,1212,Powiat olkuski,6.2
+1213000,1213,Powiat oświęcimski,8.7
+1214000,1214,Powiat proszowicki,7.6
+1215000,1215,Powiat suski,5.4
+1216000,1216,Powiat tarnowski,5.9
+1217000,1217,Powiat tatrzański,5.9
+1218000,1218,Powiat wadowicki,3.5
+1219000,1219,Powiat wielicki,6.3
+1261000,1261,Powiat m. Kraków,5.1
+1262000,1262,Powiat m. Nowy Sącz,5.4
+1263000,1263,Powiat m. Tarnów,6.9
+1401000,1401,Powiat białobrzeski,7
+1402000,1402,Powiat ciechanowski,6.5
+1403000,1403,Powiat garwoliński,7.6
+1404000,1404,Powiat gostyniński,7.8
+1405000,1405,Powiat grodziski,8.7
+1406000,1406,Powiat grójecki,5.4
+1407000,1407,Powiat kozienicki,5.9
+1408000,1408,Powiat legionowski,7.6
+1409000,1409,Powiat lipski,6.4
+1410000,1410,Powiat łosicki,7.3
+1411000,1411,Powiat makowski,6.4
+1412000,1412,Powiat miński,11.7
+1413000,1413,Powiat mławski,4.8
+1414000,1414,Powiat nowodworski,5.6
+1415000,1415,Powiat ostrołęcki,5.8
+1416000,1416,Powiat ostrowski,8.1
+1417000,1417,Powiat otwocki,10.4
+1418000,1418,Powiat piaseczyński,8.9
+1419000,1419,Powiat płocki,8.6
+1420000,1420,Powiat płoński,9.5
+1421000,1421,Powiat pruszkowski,7.7
+1422000,1422,Powiat przasnyski,7
+1423000,1423,Powiat przysuski,5.6
+1424000,1424,Powiat pułtuski,7.3
+1425000,1425,Powiat radomski,5.6
+1426000,1426,Powiat siedlecki,7.6
+1427000,1427,Powiat sierpecki,8.5
+1428000,1428,Powiat sochaczewski,9.2
+1429000,1429,Powiat sokołowski,7.8
+1430000,1430,Powiat szydłowiecki,7.8
+1432000,1432,Powiat warszawski zachodni,9.4
+1433000,1433,Powiat węgrowski,7.7
+1434000,1434,Powiat wołomiński,12.2
+1435000,1435,Powiat wyszkowski,10
+1436000,1436,Powiat zwoleński,4.5
+1437000,1437,Powiat żuromiński,6.3
+1438000,1438,Powiat żyrardowski,6.5
+1461000,1461,Powiat m. Ostrołęka,5.5
+1462000,1462,Powiat m. Płock,11
+1463000,1463,Powiat m. Radom,6
+1464000,1464,Powiat m. Siedlce,8.3
+1465000,1465,Powiat m. st. Warszawa,10.6
+1601000,1601,Powiat brzeski,4.9
+1602000,1602,Powiat głubczycki,7.9
+1603000,1603,Powiat kędzierzyńsko-kozielski,6.3
+1604000,1604,Powiat kluczborski,5.1
+1605000,1605,Powiat krapkowicki,5.9
+1606000,1606,Powiat namysłowski,7
+1607000,1607,Powiat nyski,6.1
+1608000,1608,Powiat oleski,7.7
+1609000,1609,Powiat opolski,7.2
+1610000,1610,Powiat prudnicki,6.2
+1611000,1611,Powiat strzelecki,5.7
+1661000,1661,Powiat m. Opole,8
+1801000,1801,Powiat bieszczadzki,4.5
+1802000,1802,Powiat brzozowski,5.7
+1803000,1803,Powiat dębicki,6.9
+1804000,1804,Powiat jarosławski,4.9
+1805000,1805,Powiat jasielski,7.3
+1806000,1806,Powiat kolbuszowski,5.3
+1807000,1807,Powiat krośnieński,6.9
+1808000,1808,Powiat leżajski,5.4
+1809000,1809,Powiat lubaczowski,6.3
+1810000,1810,Powiat łańcucki,10.2
+1811000,1811,Powiat mielecki,8.5
+1812000,1812,Powiat niżański,5.5
+1813000,1813,Powiat przemyski,7.4
+1814000,1814,Powiat przeworski,8.2
+1815000,1815,Powiat ropczycko-sędziszowski,7.3
+1816000,1816,Powiat rzeszowski,8
+1817000,1817,Powiat sanocki,9
+1818000,1818,Powiat stalowowolski,7.2
+1819000,1819,Powiat strzyżowski,10.4
+1820000,1820,Powiat tarnobrzeski,5.5
+1821000,1821,Powiat leski,12.3
+1861000,1861,Powiat m. Krosno,9.5
+1862000,1862,Powiat m. Przemyśl,4.7
+1863000,1863,Powiat m. Rzeszów,9.7
+1864000,1864,Powiat m. Tarnobrzeg,7.2
+2001000,2001,Powiat augustowski,6.2
+2002000,2002,Powiat białostocki,7.8
+2003000,2003,Powiat bielski,7.2
+2004000,2004,Powiat grajewski,5.7
+2005000,2005,Powiat hajnowski,6.1
+2006000,2006,Powiat kolneński,6.9
+2007000,2007,Powiat łomżyński,5.2
+2008000,2008,Powiat moniecki,7
+2009000,2009,Powiat sejneński,7.9
+2010000,2010,Powiat siemiatycki,6.5
+2011000,2011,Powiat sokólski,4.9
+2012000,2012,Powiat suwalski,5.9
+2013000,2013,Powiat wysokomazowiecki,7.6
+2014000,2014,Powiat zambrowski,5.7
+2061000,2061,Powiat m. Białystok,7.5
+2062000,2062,Powiat m. Łomża,5.8
+2063000,2063,Powiat m. Suwałki,8.3
+2201000,2201,Powiat bytowski,8.2
+2202000,2202,Powiat chojnicki,8.1
+2203000,2203,Powiat człuchowski,7.2
+2204000,2204,Powiat gdański,8.4
+2205000,2205,Powiat kartuski,8.1
+2206000,2206,Powiat kościerski,9.7
+2207000,2207,Powiat kwidzyński,6.5
+2208000,2208,Powiat lęborski,7.3
+2209000,2209,Powiat malborski,8.5
+2210000,2210,Powiat nowodworski,6.8
+2211000,2211,Powiat pucki,9.6
+2212000,2212,Powiat słupski,9
+2213000,2213,Powiat starogardzki,9.2
+2214000,2214,Powiat tczewski,9.7
+2215000,2215,Powiat wejherowski,8.8
+2216000,2216,Powiat sztumski,6.9
+2261000,2261,Powiat m. Gdańsk,9.5
+2262000,2262,Powiat m. Gdynia,8.8
+2263000,2263,Powiat m. Słupsk,10.6
+2264000,2264,Powiat m. Sopot,8.7
+2401000,2401,Powiat będziński,7.7
+2402000,2402,Powiat bielski,6.1
+2403000,2403,Powiat cieszyński,6.3
+2404000,2404,Powiat częstochowski,5.2
+2405000,2405,Powiat gliwicki,4.9
+2406000,2406,Powiat kłobucki,5
+2407000,2407,Powiat lubliniecki,8.1
+2408000,2408,Powiat mikołowski,6.2
+2409000,2409,Powiat myszkowski,5.1
+2410000,2410,Powiat pszczyński,5.6
+2411000,2411,Powiat raciborski,5.8
+2412000,2412,Powiat rybnicki,5.1
+2413000,2413,Powiat tarnogórski,6.7
+2414000,2414,Powiat bieruńsko-lędziński,3.3
+2415000,2415,Powiat wodzisławski,7.6
+2416000,2416,Powiat zawierciański,4.9
+2417000,2417,Powiat żywiecki,5.6
+2461000,2461,Powiat m. Bielsko-Biała,5.8
+2462000,2462,Powiat m. Bytom,7.7
+2463000,2463,Powiat m. Chorzów,8.9
+2464000,2464,Powiat m. Częstochowa,4.7
+2465000,2465,Powiat m. Dąbrowa Górnicza,5
+2466000,2466,Powiat m. Gliwice,3.6
+2467000,2467,Powiat m. Jastrzębie-Zdrój,8.5
+2468000,2468,Powiat m. Jaworzno,5.8
+2469000,2469,Powiat m. Katowice,5.8
+2470000,2470,Powiat m. Mysłowice,5.3
+2471000,2471,Powiat m. Piekary Śląskie,4.8
+2472000,2472,Powiat m. Ruda Śląska,6.1
+2473000,2473,Powiat m. Rybnik,8.4
+2474000,2474,Powiat m. Siemianowice Śląskie,5.7
+2475000,2475,Powiat m. Sosnowiec,4.5
+2476000,2476,Powiat m. Świętochłowice,9.1
+2477000,2477,Powiat m. Tychy,5
+2478000,2478,Powiat m. Zabrze,6.8
+2479000,2479,Powiat m. Żory,8.5
+2601000,2601,Powiat buski,3.7
+2602000,2602,Powiat jędrzejowski,2.7
+2603000,2603,Powiat kazimierski,5.4
+2604000,2604,Powiat kielecki,5.2
+2605000,2605,Powiat konecki,7.9
+2606000,2606,Powiat opatowski,4
+2607000,2607,Powiat ostrowiecki,4.9
+2608000,2608,Powiat pińczowski,4.4
+2609000,2609,Powiat sandomierski,5.8
+2610000,2610,Powiat skarżyski,5.8
+2611000,2611,Powiat starachowicki,4
+2612000,2612,Powiat staszowski,5.3
+2613000,2613,Powiat włoszczowski,4.7
+2661000,2661,Powiat m. Kielce,5.8
+2801000,2801,Powiat bartoszycki,8.4
+2802000,2802,Powiat braniewski,10.4
+2803000,2803,Powiat działdowski,8.3
+2804000,2804,Powiat elbląski,8.4
+2805000,2805,Powiat ełcki,10
+2806000,2806,Powiat giżycki,9.5
+2807000,2807,Powiat iławski,5.8
+2808000,2808,Powiat kętrzyński,8.6
+2809000,2809,Powiat lidzbarski,8
+2810000,2810,Powiat mrągowski,11.4
+2811000,2811,Powiat nidzicki,12.4
+2812000,2812,Powiat nowomiejski,9.3
+2813000,2813,Powiat olecki,7.5
+2814000,2814,Powiat olsztyński,10.9
+2815000,2815,Powiat ostródzki,8
+2816000,2816,Powiat piski,5.7
+2817000,2817,Powiat szczycieński,8.2
+2818000,2818,Powiat gołdapski,8.2
+2819000,2819,Powiat węgorzewski,7.7
+2861000,2861,Powiat m. Elbląg,7.7
+2862000,2862,Powiat m. Olsztyn,13.8
+3001000,3001,Powiat chodzieski,7.2
+3002000,3002,Powiat czarnkowsko-trzcianecki,8.5
+3003000,3003,Powiat gnieźnieński,9.7
+3004000,3004,Powiat gostyński,7.7
+3005000,3005,Powiat grodziski,4.4
+3006000,3006,Powiat jarociński,5.8
+3007000,3007,Powiat kaliski,10.2
+3008000,3008,Powiat kępiński,9.8
+3009000,3009,Powiat kolski,6.1
+3010000,3010,Powiat koniński,7.5
+3011000,3011,Powiat kościański,6.7
+3012000,3012,Powiat krotoszyński,4.6
+3013000,3013,Powiat leszczyński,8.6
+3014000,3014,Powiat międzychodzki,6.7
+3015000,3015,Powiat nowotomyski,6.4
+3016000,3016,Powiat obornicki,9.5
+3017000,3017,Powiat ostrowski,8.4
+3018000,3018,Powiat ostrzeszowski,7
+3019000,3019,Powiat pilski,7.3
+3020000,3020,Powiat pleszewski,7.6
+3021000,3021,Powiat poznański,8.4
+3022000,3022,Powiat rawicki,10
+3023000,3023,Powiat słupecki,8
+3024000,3024,Powiat szamotulski,7.4
+3025000,3025,Powiat średzki,7.1
+3026000,3026,Powiat śremski,5.9
+3027000,3027,Powiat turecki,5.1
+3028000,3028,Powiat wągrowiecki,10
+3029000,3029,Powiat wolsztyński,6.2
+3030000,3030,Powiat wrzesiński,7.3
+3031000,3031,Powiat złotowski,6.6
+3061000,3061,Powiat m. Kalisz,13.2
+3062000,3062,Powiat m. Konin,7.3
+3063000,3063,Powiat m. Leszno,6.1
+3064000,3064,Powiat m. Poznań,8.7
+3201000,3201,Powiat białogardzki,6.1
+3202000,3202,Powiat choszczeński,7
+3203000,3203,Powiat drawski,3.8
+3204000,3204,Powiat goleniowski,5.2
+3205000,3205,Powiat gryficki,5.9
+3206000,3206,Powiat gryfiński,3.8
+3207000,3207,Powiat kamieński,3.8
+3208000,3208,Powiat kołobrzeski,4.8
+3209000,3209,Powiat koszaliński,8
+3210000,3210,Powiat myśliborski,4.7
+3211000,3211,Powiat policki,7
+3212000,3212,Powiat pyrzycki,6
+3213000,3213,Powiat sławieński,6
+3214000,3214,Powiat stargardzki,7.9
+3215000,3215,Powiat szczecinecki,6.6
+3216000,3216,Powiat świdwiński,5.9
+3217000,3217,Powiat wałecki,6.3
+3218000,3218,Powiat łobeski,4.8
+3261000,3261,Powiat m. Koszalin,8.6
+3262000,3262,Powiat m. Szczecin,7.6
+3263000,3263,Powiat m. Świnoujście,6.4
