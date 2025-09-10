@@ -1,0 +1,5 @@
+*.md linguist-language=R
+*.py linguist-language=Python
+*.R linguist-language=R
+*.sql linguist-language=SQL
+*.html linguist-documentation
